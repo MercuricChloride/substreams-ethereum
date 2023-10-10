@@ -12,6 +12,7 @@ extern crate proc_macro;
 
 use ethabi::{Error, Result};
 use std::borrow::Cow;
+use syn::{spanned::Spanned, Ident};
 
 const ERROR_MSG: &str = "`derive(EthabiContract)` in substreams-ethereum failed";
 
@@ -25,8 +26,13 @@ pub fn ethabi_derive(input: proc_macro::TokenStream) -> proc_macro::TokenStream 
 fn impl_ethabi_derive(ast: &syn::DeriveInput) -> Result<proc_macro2::TokenStream> {
     let options = get_options(&ast.attrs, "ethabi_contract_options")?;
     let path = get_option(&options, "path")?;
+    let additional_derives = get_option(&options, "additional_derives")?;
+    let additional_derives: Vec<Ident> = additional_derives
+        .split(',')
+        .map(|s| Ident::new(s.trim(), s.span()))
+        .collect();
 
-    substreams_ethereum_abigen::generate_abi_code(path)
+    substreams_ethereum_abigen::generate_abi_code(path, Some(additional_derives))
         .map_err(|e| Error::Other(Cow::Owned(format!("{}", e))))
 }
 

@@ -29,10 +29,11 @@ use std::{
     env, fs,
     path::{Path, PathBuf},
 };
-use syn::Index;
+use syn::{Ident, Index};
 
 pub fn generate_abi_code<S: AsRef<str>>(
     path: S,
+    event_derives: Option<Vec<Ident>>,
 ) -> Result<proc_macro2::TokenStream, anyhow::Error> {
     let normalized_path = normalize_path(path.as_ref())?;
     let source_file = fs::File::open(&normalized_path).map_err(|_| {
@@ -43,15 +44,16 @@ pub fn generate_abi_code<S: AsRef<str>>(
     })?;
     let contract = Contract::load(source_file)?;
     let c = contract::Contract::from(&contract);
-    Ok(c.generate())
+    Ok(c.generate(event_derives))
 }
 
 pub fn generate_abi_code_from_bytes(
     bytes: &[u8],
+    event_derives: Option<Vec<Ident>>,
 ) -> Result<proc_macro2::TokenStream, anyhow::Error> {
     let contract = Contract::load(bytes)?;
     let c = contract::Contract::from(&contract);
-    Ok(c.generate())
+    Ok(c.generate(event_derives))
 }
 
 fn normalize_path<S: AsRef<Path>>(relative_path: S) -> Result<PathBuf, anyhow::Error> {

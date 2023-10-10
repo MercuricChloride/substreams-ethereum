@@ -8,6 +8,7 @@
 
 use proc_macro2::TokenStream;
 use quote::quote;
+use syn::Ident;
 
 // use crate::{constructor::Constructor,};
 use crate::{event::Event, function::Function};
@@ -69,13 +70,14 @@ impl<'a> From<&'a ethabi::Contract> for Contract {
 
 impl Contract {
     /// Generates rust interface for a contract.
-    pub fn generate(&self) -> TokenStream {
+    /// The additional derives argument allows us to derive additional traits on our generated events
+    pub fn generate(&self, additional_derives: Option<Vec<Ident>>) -> TokenStream {
         // let constructor = self.constructor.as_ref().map(Constructor::generate);
         let functions: Vec<_> = self.functions.iter().map(Function::generate).collect();
         let events: Vec<_> = self
             .events
             .iter()
-            .map(|event| event.generate_event())
+            .map(|event| event.generate_event(additional_derives.clone()))
             .collect();
         // let logs: Vec<_> = self.events.iter().map(Event::generate_log).collect();
         quote! {
@@ -122,7 +124,7 @@ mod test {
         let c = Contract::from(&ethabi_contract);
 
         assert_ast_eq(
-            c.generate(),
+            c.generate(None),
             quote! {
                 const INTERNAL_ERR: &'static str = "`ethabi_derive` internal error";
 

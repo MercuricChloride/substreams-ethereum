@@ -1,6 +1,7 @@
 use heck::{ToSnakeCase, ToUpperCamelCase};
 use proc_macro2::{Span, TokenStream};
 use quote::quote;
+use syn::Ident;
 
 use crate::{decode_topic, fixed_data_size, min_data_size};
 
@@ -137,7 +138,7 @@ impl<'a> From<(&'a String, &'a ethabi::Event)> for Event {
 
 impl Event {
     /// Generates rust interface for contract's event.
-    pub fn generate_event(&self) -> TokenStream {
+    pub fn generate_event(&self, additional_derives: Option<Vec<Ident>>) -> TokenStream {
         let name = &self.name;
         let topic_count = &self.topic_count;
         let topic_hash_bytes: Vec<_> = self
@@ -147,6 +148,7 @@ impl Event {
             .collect();
         let camel_name = syn::Ident::new(&self.name.to_upper_camel_case(), Span::call_site());
         let log_fields = &self.log_fields;
+        let additional_derives = additional_derives.unwrap_or_default();
 
         let decode_data = &self.decode_data;
         let mut decode_fields = Vec::with_capacity(
@@ -174,7 +176,7 @@ impl Event {
         };
 
         quote! {
-            #[derive(Debug, Clone, PartialEq)]
+            #[derive(Debug, Clone, PartialEq, #(#additional_derives),*)]
             pub struct #camel_name {
                 #(#log_fields),*
             }
@@ -233,7 +235,7 @@ mod tests {
         let e = Event::from((&ethabi_event.name, &ethabi_event));
 
         assert_ast_eq(
-            e.generate_event(),
+            e.generate_event(None),
             quote! {
                 #[derive(Debug, Clone, PartialEq)]
                 pub struct Hello {}
@@ -316,7 +318,7 @@ mod tests {
         let e = Event::from((&ethabi_event.name, &ethabi_event));
 
         assert_ast_eq(
-            e.generate_event(),
+            e.generate_event(None),
             quote! {
                 #[derive(Debug, Clone, PartialEq)]
                 pub struct One {
@@ -428,7 +430,7 @@ mod tests {
         let e = Event::from((&ethabi_event.name, &ethabi_event));
 
         assert_ast_eq(
-            e.generate_event(),
+            e.generate_event(None),
             quote! {
                 #[derive(Debug, Clone, PartialEq)]
                 pub struct Transfer {
@@ -571,7 +573,7 @@ mod tests {
         let e = Event::from((&ethabi_event.name, &ethabi_event));
 
         assert_ast_eq(
-            e.generate_event(),
+            e.generate_event(None),
             quote! {
                 #[derive(Debug, Clone, PartialEq)]
                 pub struct Transfer {
