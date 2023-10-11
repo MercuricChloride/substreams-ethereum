@@ -71,13 +71,13 @@ impl<'a> From<&'a ethabi::Contract> for Contract {
 impl Contract {
     /// Generates rust interface for a contract.
     /// The additional derives argument allows us to derive additional traits on our generated events
-    pub fn generate(&self, additional_derives: Option<Vec<Ident>>) -> TokenStream {
+    pub fn generate(&self) -> TokenStream {
         // let constructor = self.constructor.as_ref().map(Constructor::generate);
         let functions: Vec<_> = self.functions.iter().map(Function::generate).collect();
         let events: Vec<_> = self
             .events
             .iter()
-            .map(|event| event.generate_event(additional_derives.clone()))
+            .map(|event| event.generate_event())
             .collect();
         // let logs: Vec<_> = self.events.iter().map(Event::generate_log).collect();
         quote! {
@@ -95,6 +95,7 @@ impl Contract {
             /// Contract's events.
             #[allow(dead_code, unused_imports, unused_variables)]
             pub mod events {
+                use derive_more::{From,Into};
                 use super::INTERNAL_ERR;
                 #(#events)*
             }
@@ -124,7 +125,7 @@ mod test {
         let c = Contract::from(&ethabi_contract);
 
         assert_ast_eq(
-            c.generate(None),
+            c.generate(),
             quote! {
                 const INTERNAL_ERR: &'static str = "`ethabi_derive` internal error";
 

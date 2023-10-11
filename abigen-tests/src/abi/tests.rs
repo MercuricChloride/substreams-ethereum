@@ -1569,8 +1569,9 @@
     /// Contract's events.
     #[allow(dead_code, unused_imports, unused_variables)]
     pub mod events {
+        use derive_more::{From, Into};
         use super::INTERNAL_ERR;
-        #[derive(Debug, Clone, PartialEq)]
+        #[derive(Debug, Clone, PartialEq, From, Into)]
         pub struct EventAddressIdxString {
             pub first: Vec<u8>,
             pub second: String,
@@ -1665,7 +1666,7 @@
                 Self::decode(log)
             }
         }
-        #[derive(Debug, Clone, PartialEq)]
+        #[derive(Debug, Clone, PartialEq, From, Into)]
         pub struct EventAddressIdxStringUint256IdxBytes {
             pub first: Vec<u8>,
             pub second: String,
@@ -1786,7 +1787,7 @@
                 Self::decode(log)
             }
         }
-        #[derive(Debug, Clone, PartialEq)]
+        #[derive(Debug, Clone, PartialEq, From, Into)]
         pub struct EventAddressIdxUint256Uint256AddressIdx {
             pub first: Vec<u8>,
             pub second: substreams::scalar::BigInt,
@@ -1917,7 +1918,7 @@
                 Self::decode(log)
             }
         }
-        #[derive(Debug, Clone, PartialEq)]
+        #[derive(Debug, Clone, PartialEq, From, Into)]
         pub struct EventBytes20UintAddressIdx {
             pub first: [u8; 20usize],
             pub second: substreams::scalar::BigInt,
@@ -2031,7 +2032,7 @@
                 Self::decode(log)
             }
         }
-        #[derive(Debug, Clone, PartialEq)]
+        #[derive(Debug, Clone, PartialEq, From, Into)]
         pub struct EventBytes32UintAddressIdx {
             pub first: [u8; 32usize],
             pub second: substreams::scalar::BigInt,
@@ -2145,7 +2146,7 @@
                 Self::decode(log)
             }
         }
-        #[derive(Debug, Clone, PartialEq)]
+        #[derive(Debug, Clone, PartialEq, From, Into)]
         pub struct EventInt256 {
             pub param0: substreams::scalar::BigInt,
         }
@@ -2228,7 +2229,7 @@
                 Self::decode(log)
             }
         }
-        #[derive(Debug, Clone, PartialEq)]
+        #[derive(Debug, Clone, PartialEq, From, Into)]
         pub struct EventInt256Idx {
             pub param0: substreams::scalar::BigInt,
         }
@@ -2298,7 +2299,7 @@
                 Self::decode(log)
             }
         }
-        #[derive(Debug, Clone, PartialEq)]
+        #[derive(Debug, Clone, PartialEq, From, Into)]
         pub struct EventUArrayBool {
             pub param0: Vec<bool>,
         }
@@ -2379,7 +2380,7 @@
                 Self::decode(log)
             }
         }
-        #[derive(Debug, Clone, PartialEq)]
+        #[derive(Debug, Clone, PartialEq, From, Into)]
         pub struct EventUBytes8UBytes16UBytes24UBytes32 {
             pub param0: [u8; 8usize],
             pub param1: [u8; 16usize],
@@ -2500,7 +2501,7 @@
                 Self::decode(log)
             }
         }
-        #[derive(Debug, Clone, PartialEq)]
+        #[derive(Debug, Clone, PartialEq, From, Into)]
         pub struct EventUFixedArrayString {
             pub param0: [String; 2usize],
         }
@@ -2591,7 +2592,7 @@
                 Self::decode(log)
             }
         }
-        #[derive(Debug, Clone, PartialEq)]
+        #[derive(Debug, Clone, PartialEq, From, Into)]
         pub struct EventUFixedArraySubDynamic {
             pub param0: [Vec<u8>; 2usize],
         }
@@ -2682,7 +2683,7 @@
                 Self::decode(log)
             }
         }
-        #[derive(Debug, Clone, PartialEq)]
+        #[derive(Debug, Clone, PartialEq, From, Into)]
         pub struct EventUFixedArraySubFixed {
             pub param0: [Vec<u8>; 2usize],
         }
@@ -2779,7 +2780,7 @@
                 Self::decode(log)
             }
         }
-        #[derive(Debug, Clone, PartialEq)]
+        #[derive(Debug, Clone, PartialEq, From, Into)]
         pub struct EventUTupleAddress {
             pub param0: (Vec<u8>,),
         }
@@ -2867,7 +2868,7 @@
                 Self::decode(log)
             }
         }
-        #[derive(Debug, Clone, PartialEq)]
+        #[derive(Debug, Clone, PartialEq, From, Into)]
         pub struct EventUTupleBool {
             pub param0: (bool,),
         }
@@ -2953,7 +2954,7 @@
                 Self::decode(log)
             }
         }
-        #[derive(Debug, Clone, PartialEq)]
+        #[derive(Debug, Clone, PartialEq, From, Into)]
         pub struct EventWithOverloads1 {
             pub first: Vec<u8>,
         }
@@ -3036,7 +3037,7 @@
                 Self::decode(log)
             }
         }
-        #[derive(Debug, Clone, PartialEq)]
+        #[derive(Debug, Clone, PartialEq, From, Into)]
         pub struct EventWithOverloads2 {
             pub second: String,
         }
@@ -3117,7 +3118,7 @@
                 Self::decode(log)
             }
         }
-        #[derive(Debug, Clone, PartialEq)]
+        #[derive(Debug, Clone, PartialEq, From, Into)]
         pub struct EventWithOverloads3 {
             pub third: substreams::scalar::BigInt,
         }

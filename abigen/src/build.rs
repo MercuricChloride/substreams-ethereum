@@ -4,7 +4,7 @@ use std::str;
 use crate::{generate_abi_code, generate_abi_code_from_bytes, normalize_path};
 use anyhow::Context;
 use quote::quote;
-use syn::Ident;
+use syn::{parse_str, Ident};
 
 #[derive(Debug, Clone)]
 pub struct Abigen<'a> {
@@ -40,22 +40,15 @@ impl<'a> Abigen<'a> {
         })
     }
 
-    pub fn generate(&self, event_derives: Vec<&str>) -> Result<GeneratedBindings, anyhow::Error> {
+    pub fn generate(&self) -> Result<GeneratedBindings, anyhow::Error> {
         let item;
-        let event_derives = Some(
-            event_derives
-                .iter()
-                .map(|v| syn::Ident::new(&v, proc_macro2::Span::call_site()))
-                .collect(),
-        );
         match &self.bytes {
             None => {
-                item = generate_abi_code(self.abi_path.to_string_lossy(), event_derives)
+                item = generate_abi_code(self.abi_path.to_string_lossy())
                     .context("generating abi code")?;
             }
             Some(bytes) => {
-                item = generate_abi_code_from_bytes(bytes, event_derives)
-                    .context("generating abi code")?;
+                item = generate_abi_code_from_bytes(bytes).context("generating abi code")?;
             }
         }
 

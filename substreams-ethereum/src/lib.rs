@@ -80,19 +80,6 @@ macro_rules! use_contract {
             struct _Dummy;
         }
     };
-
-    ($module: ident, $path: expr, $( $idents:ident ),* $(,)?) => {
-        #[allow(dead_code)]
-        #[allow(missing_docs)]
-        #[allow(unused_imports)]
-        #[allow(unused_mut)]
-        #[allow(unused_variables)]
-        pub mod $module {
-            #[derive(substreams_ethereum::EthabiContract)]
-           event_derives #[ethabi_contract_options(path = $path, additional_derives = $( stringify!($idents) ),*)]
-            struct _Dummy;
-        }
-    };
 }
 
 /// The `init` macro registers a custom get random function in the system which is required
